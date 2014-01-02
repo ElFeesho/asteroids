@@ -14,10 +14,12 @@ Engine::~Engine()
 void Engine::pushScene(Scene *scene)
 {
 	scenes.push_back(scene);
+	scene->sceneAdded();
 }
 
 void Engine::popScene()
 {
+	scenes.back()->sceneRemoved();
 	scenes.pop_back();
 }
 

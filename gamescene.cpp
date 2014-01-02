@@ -47,7 +47,6 @@ void GameScene::generateAsteroids()
 		}
 
 		addEntity(asteroid);
-		addRenderable(asteroid);
 	}
 }
 

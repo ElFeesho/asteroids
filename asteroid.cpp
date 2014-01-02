@@ -18,15 +18,15 @@ Asteroid::Asteroid(double radius)
 	peeks[7] = peeks[0];
 
 	xspeed = 0.2 + rand()%1;
-	xspeed *= rand()%10>5?-1:1;
+	xspeed *= rand()%10>5?-1.0:1.0;
 
 	yspeed = 0.2 + rand()%1;
-	yspeed *= rand()%10>5?-1:1;
+	yspeed *= rand()%10>5?-1.0:1.0;
 }
 
 Asteroid::~Asteroid()
 {
-
+	Engine::getInstance()->getActiveScene()->removeRenderable(this);
 }
 
 int Asteroid::getId()
@@ -76,6 +76,16 @@ bool Asteroid::update()
 		Y(0);
 	}
 	return isAlive();
+}
+
+void Asteroid::entityAdded()
+{
+	Engine::getInstance()->getActiveScene()->addRenderable(this);
+}
+
+void Asteroid::entityRemoved()
+{
+	Engine::getInstance()->getActiveScene()->removeRenderable(this);
 }
 
 void Asteroid::destroyed()

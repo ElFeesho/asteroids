@@ -15,6 +15,9 @@ public:
 
 	int getId();
 
+	void entityAdded();
+	void entityRemoved();
+
 private:
 	double angle;
 	long birthTime;

@@ -50,6 +50,16 @@ void Entity::setRadius(double r)
 	radius = r;
 }
 
+void Entity::entityAdded()
+{
+	// Can be used to add renderables etc
+}
+
+void Entity::entityRemoved()
+{
+	// Can be used to remove renderables
+}
+
 string Entity::getName()
 {
 	return name;

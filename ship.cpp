@@ -48,11 +48,11 @@ bool Ship::update()
 	Uint8 *keystate = SDL_GetKeyState(NULL);
 	if(keystate[SDLK_LEFT])
 	{
-		angle -= 0.1;
+		angle -= 0.08;
 	}
 	if(keystate[SDLK_RIGHT])
 	{
-		angle+=0.1;
+		angle += 0.08;
 	}
 
 	if(keystate[SDLK_UP])

@@ -1,6 +1,6 @@
 #include "score.hpp"
 
-Score::Score()
+Score::Score() : points(0)
 {
 	setName("score");
 	X(0);

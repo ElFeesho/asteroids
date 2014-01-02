@@ -15,6 +15,9 @@ public:
 
 	virtual bool update() = 0;
 
+	virtual void entityAdded();
+	virtual void entityRemoved();
+
 	string getName();
 
 	void X(double x);

@@ -17,6 +17,9 @@ public:
 	void hasCollided(Collidable *target);
 
 	void destroyed();
+
+	void entityAdded();
+	void entityRemoved();
 private:
 	double angle;
 	double rotspeed;

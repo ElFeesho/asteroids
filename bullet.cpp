@@ -18,6 +18,7 @@ Bullet::Bullet(double angle, double x, double y) : angle(angle)
 Bullet::~Bullet()
 {
 	((Ship*)Engine::getInstance()->getActiveScene()->findEntityByName("ship"))->decShotCount();
+	Engine::getInstance()->getActiveScene()->removeRenderable(this);
 }
 
 bool Bullet::render()
@@ -40,4 +41,14 @@ bool Bullet::update()
 int Bullet::getId()
 {
 	return 1;
+}
+
+void Bullet::entityAdded()
+{
+	Engine::getInstance()->getActiveScene()->addRenderable(this);
+}
+
+void Bullet::entityRemoved()
+{
+	Engine::getInstance()->getActiveScene()->removeRenderable(this);
 }

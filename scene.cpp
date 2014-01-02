@@ -1,6 +1,6 @@
 #include "scene.hpp"
 
-Scene::Scene()
+Scene::Scene() : sceneLive(false)
 {
 
 }
@@ -13,11 +13,41 @@ Scene::~Scene()
 void Scene::addEntity(Entity *entity)
 {
 	entities.push_back(entity);
+	if(sceneLive)
+	{
+		entity->entityAdded();
+	}
 }
 
 void Scene::addRenderable(Renderable *renderable)
 {
 	renderables.push_back(renderable);
+}
+
+void Scene::removeRenderable(Renderable *renderable)
+{
+	for(int i = 0; i < renderables.size(); i++)
+	{
+		if(renderables[i] == renderable)
+		{
+			renderables.erase(renderables.begin()+i);
+			return;
+		}
+	}
+}
+
+void Scene::sceneAdded()
+{
+	sceneLive = true;
+	for(int i = 0; i < entities.size(); i++)
+	{
+		entities[i]->entityAdded();
+	}
+}
+
+void Scene::sceneRemoved()
+{
+
 }
 
 void Scene::update()
@@ -26,6 +56,7 @@ void Scene::update()
 	{
 		if(!entities[i]->update())
 		{
+			entities[i]->entityRemoved();
 			delete entities[i];
 			entities.erase(entities.begin()+i);
 		}
