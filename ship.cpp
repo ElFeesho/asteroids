@@ -33,7 +33,6 @@ Ship::Ship() : angle(0), xspeed(0), yspeed(0),  lastShot(0), shotCount(0), lives
 	yspeed = 0;
 	angle = (M_PI*2)/4;
 	setName("ship");
-
 }
 
 Ship::~Ship()
@@ -105,7 +104,6 @@ bool Ship::update()
 		lastShot = SDL_GetTicks();
 		shotCount++;
 	}
-
 
 	return isAlive();
 }
