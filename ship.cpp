@@ -46,16 +46,16 @@ bool Ship::update()
 	SDL_Surface *screen = SDL_GetVideoSurface();
 
 	Uint8 *keystate = SDL_GetKeyState(NULL);
-	if(keystate[SDLK_LEFT])
+	if(keystate[SDLK_LEFT] || keystate[SDLK_a])
 	{
 		angle -= 0.08;
 	}
-	if(keystate[SDLK_RIGHT])
+	if(keystate[SDLK_RIGHT] || keystate[SDLK_d])
 	{
 		angle += 0.08;
 	}
 
-	if(keystate[SDLK_UP])
+	if(keystate[SDLK_UP] || keystate[SDLK_w])
 	{
 		double xd = cos(angle)*-0.1;
 		double yd = sin(angle)*-0.1;
