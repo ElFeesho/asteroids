@@ -17,10 +17,10 @@ Asteroid::Asteroid(double radius)
 	}
 	peeks[7] = peeks[0];
 
-	xspeed = 0.2 + rand()%1;
-	xspeed *= rand()%10>5?-1.0:1.0;
+	xspeed = 0.2 + ((double)rand() / (double)RAND_MAX);
+	xspeed *= (double)(rand()%10>5?-1.0:1.0);
 
-	yspeed = 0.2 + rand()%1;
+	yspeed = 0.2 + ((double)rand() / (double)RAND_MAX);
 	yspeed *= rand()%10>5?-1.0:1.0;
 }
 
