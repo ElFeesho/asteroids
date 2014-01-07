@@ -5,6 +5,18 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_gfxPrimitives.h>
 
+#include "shrapnel.hpp"
+
+static void deployShrapnel(double angle, double x, double y, double xspeed, double yspeed)
+{
+	Engine::getInstance()->getActiveScene()->addEntity(new Shrapnel(angle, x, y, -3, -3));
+}
+
+void scorePoints(int points)
+{
+	((Score*)Engine::getInstance()->getActiveScene()->findEntityByName("score"))->addPoints(points);
+}
+
 Asteroid::Asteroid(double radius)
 {
 	rotspeed = 0.04;
@@ -90,18 +102,22 @@ void Asteroid::entityRemoved()
 
 void Asteroid::destroyed()
 {
-	if(getRadius()>7)
+	if(getRadius()>8)
 	{
-		for(int i = 0; i<4; i++)
+		for(int i = 0; i<3; i++)
 		{
 			Asteroid *newAsteroid = new Asteroid(getRadius()/2);
 			newAsteroid->X(X());
 			newAsteroid->Y(Y());
 			Engine::getInstance()->getActiveScene()->addEntity(newAsteroid);
-			Engine::getInstance()->getActiveScene()->addRenderable(newAsteroid);
 		}
 	}
-	((Score*)Engine::getInstance()->getActiveScene()->findEntityByName("score"))->addPoints(15);
+	
+	scorePoints(15);
+	for(int i = 0; i < 12; i++)
+	{
+		deployShrapnel(i*(M_PI/6.0), X(), Y(), 2.5, 2.5);
+	}
 }
 
 void Asteroid::hasCollided(Collidable *target)

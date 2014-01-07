@@ -7,6 +7,13 @@
 
 #include "bullet.hpp"
 
+#include "shrapnel.hpp"
+
+static void deployShrapnel(double angle, double x, double y, double xspeed, double yspeed)
+{
+	Engine::getInstance()->getActiveScene()->addEntity(new Shrapnel(angle, x, y, -3, -3));
+}
+
 void drawShip(double angle, double x, double y, double size)
 {
 	double topX = x + cos(angle)*-size;
@@ -139,6 +146,13 @@ void Ship::hasCollided(Collidable *with)
 {
 	if(with->getId() == 2) // Hit an asteroid
 	{
+		deployShrapnel(angle, X(), Y(), xspeed, yspeed);
+
+		deployShrapnel(angle+0.21, X()+3, Y()+3, xspeed, yspeed);
+
+		deployShrapnel(angle-0.21, X()-2, Y()-4, xspeed, yspeed);
+
+		deployShrapnel(angle+0.4, X(), Y(), xspeed, yspeed);
 		lives--;
 		X(SDL_GetVideoSurface()->w/2-getRadius());
 		Y(SDL_GetVideoSurface()->h/2-getRadius());
