@@ -1,4 +1,4 @@
-OBJS=main.o ship.o number.o gamescene.o bullet.o asteroid.o score.o shrapnel.o
+OBJS=main.o ship.o number.o gamescene.o bullet.o asteroid.o gameover.o score.o shrapnel.o
 LIBS=`pkg-config --libs sdl SDL_gfx` -L../sge -lsge
 CFLAGS=`pkg-config --cflags sdl SDL_gfx` -g -O0 -I../sge
 PROG=asteroids

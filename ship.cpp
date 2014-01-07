@@ -3,6 +3,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_gfxPrimitives.h>
 
+#include "gameover.hpp"
 #include "engine.hpp"
 
 #include "bullet.hpp"
@@ -18,9 +19,9 @@ void drawShip(double angle, double x, double y, double size)
 {
 	double topX = x + cos(angle)*-size;
 	double topY = y + sin(angle)*-size;
-	double bottomRightY 	= y + sin(angle+0.5)*(size*2);
+	double bottomRightY = y + sin(angle+0.5)*(size*2);
 	double bottomLeftY 	= y + sin(angle+-0.5)*(size*2);
-	double bottomRightX 	= x + cos(angle+0.5)*(size*2);
+	double bottomRightX = x + cos(angle+0.5)*(size*2);
 	double bottomLeftX 	= x + cos(angle+-0.5)*(size*2);
 	double bottomY 		= y + sin(angle)*size;
 	double bottomX 		= x + cos(angle)*size;
@@ -30,7 +31,7 @@ void drawShip(double angle, double x, double y, double size)
 	aalineColor(SDL_GetVideoSurface(), bottomLeftX, bottomLeftY, bottomX, bottomY, 0x0088ffff);
 }
 
-Ship::Ship() : angle(0), xspeed(0), yspeed(0),  lastShot(0), shotCount(0), lives(3)
+Ship::Ship() : angle(0), xspeed(0), yspeed(0),  lastShot(0), shotCount(0), lives(3), dead(false), shouldRespawn(false)
 {
 	setRadius(5);
 	SDL_Surface *screen = SDL_GetVideoSurface();
@@ -47,9 +48,50 @@ Ship::~Ship()
 
 }
 
+int Ship::getId()
+{
+	return 0;
+}
+
+void Ship::decShotCount()
+{
+	shotCount--;
+	if(shotCount < 0)
+	{
+		shotCount = 0;
+	}
+}
+
 bool Ship::update()
 {
 	SDL_Surface *screen = SDL_GetVideoSurface();
+
+	if(dead)
+	{
+		if(SDL_GetTicks() > deathTime + 500)
+		{
+			shouldRespawn = true;
+		}
+
+		if(shouldRespawn)
+		{
+			if(lives == 0)
+			{
+				Engine::getInstance()->popScene();
+				Engine::getInstance()->pushScene(new GameOver());
+				return false;
+			}
+			X(SDL_GetVideoSurface()->w/2-getRadius());
+			Y(SDL_GetVideoSurface()->h/2-getRadius());
+			xspeed = 0;
+			yspeed = 0;
+			angle = (M_PI*2)/4;
+			dead = false;
+			shouldRespawn = false;
+		}
+
+		return isAlive();
+	}
 
 	Uint8 *keystate = SDL_GetKeyState(NULL);
 	if(keystate[SDLK_LEFT] || keystate[SDLK_a])
@@ -115,23 +157,12 @@ bool Ship::update()
 	return isAlive();
 }
 
-int Ship::getId()
-{
-	return 0;
-}
-
-void Ship::decShotCount()
-{
-	shotCount--;
-	if(shotCount < 0)
-	{
-		shotCount = 0;
-	}
-}
-
 bool Ship::render()
 {
-	drawShip(angle, X(), Y(), 5);
+	if(!dead)
+	{
+		drawShip(angle, X(), Y(), 5);
+	}
 
 	// Draw live indicators
 	for(int i = 0; i<lives; i++)
@@ -144,6 +175,11 @@ bool Ship::render()
 
 void Ship::hasCollided(Collidable *with)
 {
+	if(dead)
+	{
+		return;
+	}
+
 	if(with->getId() == 2) // Hit an asteroid
 	{
 		deployShrapnel(angle, X(), Y(), xspeed, yspeed);
@@ -154,10 +190,7 @@ void Ship::hasCollided(Collidable *with)
 
 		deployShrapnel(angle+0.4, X(), Y(), xspeed, yspeed);
 		lives--;
-		X(SDL_GetVideoSurface()->w/2-getRadius());
-		Y(SDL_GetVideoSurface()->h/2-getRadius());
-		xspeed = 0;
-		yspeed = 0;
-		angle = (M_PI*2)/4;
+		dead = true;
+		deathTime = SDL_GetTicks();
 	}
 }

@@ -29,6 +29,10 @@ private:
 	long shotCount;
 
 	int lives;
+
+	long deathTime;
+	bool dead;
+	bool shouldRespawn;
 };
 
 #endif
