@@ -8,6 +8,8 @@ class GameOver : public Scene
 public:
 	GameOver();
 	~GameOver();
+
+	void render();
 };
 
 #endif
