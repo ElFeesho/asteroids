@@ -8,7 +8,7 @@ class Bullet : public Entity, public Renderable
 {
 public:
 	Bullet(double angle, double x, double y);
-	~Bullet();
+	virtual ~Bullet();
 
 	bool render();
 	bool update();
@@ -18,6 +18,8 @@ public:
 	void entityAdded();
 	void entityRemoved();
 
+	void hasCollided(Collidable *target);
+	virtual void hitAsteroid();
 private:
 	double angle;
 	long birthTime;

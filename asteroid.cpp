@@ -122,11 +122,12 @@ void Asteroid::destroyed()
 
 void Asteroid::hasCollided(Collidable *target)
 {
-	if(target->getId() == 1)
+	if(target->getId() == 1) // hit a bullet
 	{
 		destroyed();
 
 		kill();
+		target->hasCollided(this);
 		((Entity*)target)->kill();
 	}
 	else if(target->getId() == 0) // Hit the ship

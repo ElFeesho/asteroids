@@ -38,6 +38,14 @@ bool Bullet::update()
 	return isAlive();
 }
 
+void Bullet::hasCollided(Collidable *target)
+{
+	if(target->getId() == 2) // hit an asteroid
+	{
+		hitAsteroid();
+	}
+}
+
 int Bullet::getId()
 {
 	return 1;
@@ -51,4 +59,9 @@ void Bullet::entityAdded()
 void Bullet::entityRemoved()
 {
 	Engine::getInstance()->getActiveScene()->removeRenderable(this);
+}
+
+void Bullet::hitAsteroid()
+{
+	// Does nothing for a bog standard bullet
 }

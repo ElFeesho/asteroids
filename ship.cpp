@@ -7,12 +7,19 @@
 #include "engine.hpp"
 
 #include "bullet.hpp"
+#include "clusterbullet.hpp"
 
 #include "shrapnel.hpp"
 
 static void deployShrapnel(double angle, double x, double y, double xspeed, double yspeed)
 {
 	Engine::getInstance()->getActiveScene()->addEntity(new Shrapnel(angle, x, y, -3, -3));
+}
+
+void createBullet(double angle, double x, double y)
+{
+	ClusterBullet *bullet = new ClusterBullet(angle, x, y);
+	Engine::getInstance()->getActiveScene()->addEntity(bullet);
 }
 
 void drawShip(double angle, double x, double y, double size)
@@ -145,10 +152,9 @@ bool Ship::update()
 
 	if(keystate[SDLK_SPACE] && SDL_GetTicks() > lastShot+100 && shotCount<5)
 	{
-		Bullet *bullet = new Bullet(angle, X(), Y());
-
-		Engine::getInstance()->getActiveScene()->addEntity(bullet);
-		Engine::getInstance()->getActiveScene()->addRenderable(bullet);
+		createBullet(angle, X(), Y());
+		createBullet(angle-M_PI/12, X(), Y());
+		createBullet(angle+M_PI/12, X(), Y());
 
 		lastShot = SDL_GetTicks();
 		shotCount++;
