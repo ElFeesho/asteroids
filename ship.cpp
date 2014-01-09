@@ -11,14 +11,18 @@
 
 #include "shrapnel.hpp"
 
+#define TRI_SHOT 0
+#define CLUSTER_SHOT 1
+#define SHIELD 2
+
 static void deployShrapnel(double angle, double x, double y, double xspeed, double yspeed)
 {
 	Engine::getInstance()->getActiveScene()->addEntity(new Shrapnel(angle, x, y, -3, -3));
 }
 
-void createBullet(double angle, double x, double y)
+void createBullet(double angle, double x, double y, bool clusterShot)
 {
-	ClusterBullet *bullet = new ClusterBullet(angle, x, y);
+	Bullet *bullet = clusterShot ? new ClusterBullet(angle, x, y) : new Bullet(angle, x, y);
 	Engine::getInstance()->getActiveScene()->addEntity(bullet);
 }
 
@@ -40,7 +44,7 @@ void drawShip(double angle, double x, double y, double size)
 
 Ship::Ship() : angle(0), xspeed(0), yspeed(0),  lastShot(0), shotCount(0), lives(3), dead(false), shouldRespawn(false)
 {
-	setRadius(5);
+	setRadius(8);
 	SDL_Surface *screen = SDL_GetVideoSurface();
 	X(SDL_GetVideoSurface()->w/2-getRadius());
 	Y(SDL_GetVideoSurface()->h/2-getRadius());
@@ -48,6 +52,11 @@ Ship::Ship() : angle(0), xspeed(0), yspeed(0),  lastShot(0), shotCount(0), lives
 	yspeed = 0;
 	angle = (M_PI*2)/4;
 	setName("ship");
+
+	powerUps = new bool[3];
+	powerUps[TRI_SHOT] = false;
+	powerUps[CLUSTER_SHOT] = false;
+	powerUps[SHIELD] = false;
 }
 
 Ship::~Ship()
@@ -94,6 +103,8 @@ bool Ship::update()
 			yspeed = 0;
 			angle = (M_PI*2)/4;
 			dead = false;
+			powerUps[TRI_SHOT] = false;
+			powerUps[CLUSTER_SHOT] = false;
 			shouldRespawn = false;
 		}
 
@@ -150,14 +161,22 @@ bool Ship::update()
 	}
 
 
-	if(keystate[SDLK_SPACE] && SDL_GetTicks() > lastShot+100 && shotCount<5)
+	if(keystate[SDLK_SPACE] && SDL_GetTicks() > lastShot+100 && shotCount<(5 * (powerUps[TRI_SHOT]?3:1)))
 	{
-		createBullet(angle, X(), Y());
-		createBullet(angle-M_PI/12, X(), Y());
-		createBullet(angle+M_PI/12, X(), Y());
-
+		createBullet(angle, X(), Y(), powerUps[CLUSTER_SHOT]);
+		if(powerUps[TRI_SHOT])
+		{
+			createBullet(angle-M_PI/12, X(), Y(), false);
+			createBullet(angle+M_PI/12, X(), Y(), false);
+			shotCount++;
+		}
 		lastShot = SDL_GetTicks();
 		shotCount++;
+	}
+
+	if(powerUps[SHIELD] && SDL_GetTicks()>shieldStartTime+10000)
+	{
+		powerUps[SHIELD] = false;
 	}
 
 	return isAlive();
@@ -176,6 +195,10 @@ bool Ship::render()
 		drawShip((M_PI*2)/4, 10 + i*10, 30, 4);
 	}
 
+	if(powerUps[SHIELD])
+	{
+		aacircleColor(SDL_GetVideoSurface(), X(), Y(), getRadius()+5+(cos((double)SDL_GetTicks()/100.0f)*3), 0x0088ffff);
+	}
 	return isAlive();
 }
 
@@ -186,7 +209,7 @@ void Ship::hasCollided(Collidable *with)
 		return;
 	}
 
-	if(with->getId() == 2) // Hit an asteroid
+	if(with->getId() == 2 && !powerUps[SHIELD]) // Hit an asteroid
 	{
 		deployShrapnel(angle, X(), Y(), xspeed, yspeed);
 
@@ -199,4 +222,35 @@ void Ship::hasCollided(Collidable *with)
 		dead = true;
 		deathTime = SDL_GetTicks();
 	}
+}
+
+void Ship::enableTriShot()
+{
+	powerUps[TRI_SHOT] = true;
+}
+
+void Ship::enableClusterShot()
+{
+	powerUps[CLUSTER_SHOT] = true;
+}
+
+void Ship::enableShield()
+{
+	powerUps[SHIELD] = true;
+	shieldStartTime = SDL_GetTicks();
+}
+
+bool Ship::trishotEnabled()
+{
+	return powerUps[TRI_SHOT];
+}
+
+bool Ship::clusterShotEnabled()
+{
+	return powerUps[CLUSTER_SHOT];
+}
+
+bool Ship::shieldEnabled()
+{
+	return powerUps[SHIELD];
 }

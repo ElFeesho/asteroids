@@ -61,6 +61,7 @@ bool Asteroid::render()
 			k = 0;
 		}
 	}
+
 	return isAlive();
 }
 

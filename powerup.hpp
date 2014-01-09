@@ -18,6 +18,8 @@ public:
 	void entityAdded();
 	void entityRemoved();
 
+	void hasCollided(Collidable *target);
+
 private:
 	int type;
 	long birthTime;	

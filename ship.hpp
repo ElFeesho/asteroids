@@ -20,6 +20,12 @@ public:
 
 	void decShotCount();
 
+	void enableTriShot();
+	void enableClusterShot();
+	void enableShield();
+	bool trishotEnabled();
+	bool clusterShotEnabled();
+	bool shieldEnabled();
 private:
 	double angle;
 	double xspeed;
@@ -33,6 +39,10 @@ private:
 	long deathTime;
 	bool dead;
 	bool shouldRespawn;
+
+	bool *powerUps;
+
+	long shieldStartTime;
 };
 
 #endif

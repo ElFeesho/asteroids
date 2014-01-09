@@ -10,6 +10,7 @@ public:
 	~GameOver();
 
 	void render();
+	void update();
 };
 
 #endif

@@ -2,6 +2,9 @@
 
 #include <SDL/SDL_gfxPrimitives.h>
 
+#include "engine.hpp"
+#include "gamescene.hpp"
+
 GameOver::GameOver()
 {
 
@@ -58,4 +61,15 @@ void GameOver::render()
 	aalineColor(SDL_GetVideoSurface(), 320, 200, 350, 200, 0xffffffff);
 	aalineColor(SDL_GetVideoSurface(), 350, 200, 320, 230, 0xffffffff);
 	aalineColor(SDL_GetVideoSurface(), 320, 230, 350, 280, 0xffffffff);
+}
+
+void GameOver::update()
+{
+	Uint8 *key = SDL_GetKeyState(NULL);
+	if(key[SDLK_RETURN])
+	{
+		Engine::getInstance()->popScene();
+		Engine::getInstance()->pushScene(new GameScene());
+	}
+	Scene::update();
 }
