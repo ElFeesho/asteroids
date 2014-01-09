@@ -9,7 +9,7 @@
 
 static void deployShrapnel(double angle, double x, double y, double xspeed, double yspeed)
 {
-	Engine::getInstance()->getActiveScene()->addEntity(new Shrapnel(angle, x, y, -3, -3));
+	Engine::getInstance()->getActiveScene()->addEntity(new Shrapnel(angle, x, y, -3, -3, 0xffffffff));
 }
 
 void scorePoints(int points)
@@ -53,7 +53,7 @@ bool Asteroid::render()
 	int k = 1;
 	for(double x = 0; x < M_PI * 2; x += step)
 	{
-		aalineColor(SDL_GetVideoSurface(), X() + cos(x+angle)*peeks[i], Y()+sin(x+angle)*peeks[i], X() + cos(x+step + angle)* peeks[k], Y() + sin(x +step+ angle)*peeks[k], 0x0088ffff);
+		aalineColor(SDL_GetVideoSurface(), X() + cos(x+angle)*peeks[i], Y()+sin(x+angle)*peeks[i], X() + cos(x+step + angle)* peeks[k], Y() + sin(x +step+ angle)*peeks[k], 0xffffffff);
 		i++;
 		k++;
 		if(k>7)

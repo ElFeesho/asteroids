@@ -7,7 +7,7 @@
 class Shrapnel : public Entity, public Renderable
 {
 public:
-	Shrapnel(double angle, double x, double y, double xspeed, double yspeed);
+	Shrapnel(double angle, double x, double y, double xspeed, double yspeed, int colour);
 	~Shrapnel();
 
 	bool update();
@@ -26,6 +26,7 @@ private:
 	int colour;
 	long livetime;
 	int size;
+	int alpha;
 };
 
 #endif

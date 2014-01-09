@@ -4,13 +4,13 @@
 #include <math.h>
 
 #include "engine.hpp"
-#include "gamescene.hpp"
+#include "startscene.hpp"
 
 int main(int argc, char **argv)
 {
 	SDL_Init(SDL_INIT_VIDEO);
 
-	SDL_Surface *screen = SDL_SetVideoMode(640, 320, 0, SDL_SWSURFACE);
+	SDL_Surface *screen = SDL_SetVideoMode(1366, 768, 0, SDL_SWSURFACE|SDL_FULLSCREEN);
 
 	int done = 0;
 	SDL_Event event;
@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 
 	Engine *engine = Engine::getInstance();
 
-	engine->pushScene(new GameScene());
+	engine->pushScene(new StartScene());
 
 	while (!done)
 	{

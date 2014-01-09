@@ -31,7 +31,7 @@ bool Bullet::update()
 {
 	X(X()+cos(angle)*-5);
 	Y(Y()+sin(angle)*-5);
-	if(SDL_GetTicks() > birthTime + 1000)
+	if(SDL_GetTicks() > birthTime + 3000)
 	{
 		kill();
 	}

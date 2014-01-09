@@ -5,12 +5,11 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_gfxPrimitives.h>
 
-Shrapnel::Shrapnel(double angle, double x, double y, double xspeed, double yspeed) : angle(angle), xspeed(xspeed), yspeed(yspeed)
+Shrapnel::Shrapnel(double angle, double x, double y, double xspeed, double yspeed, int colour) : angle(angle), xspeed(xspeed), yspeed(yspeed), colour(colour), alpha(255)
 {
 	X(x);
 	Y(y);
-	colour = 0x0088ffff;
-	rotspeed = rand()%10>5?0.1:-0.1;
+	rotspeed = rand() % 10 > 5 ? 0.1 : -0.1;
 	livetime = SDL_GetTicks()+500;
 
 	size = 5 + ((rand()%20))-10;
@@ -38,9 +37,11 @@ bool Shrapnel::update()
 	rotation += rotspeed;
 	if(SDL_GetTicks()>livetime)
 	{
-		colour -= 0x0088ffff/7;
+		long past = SDL_GetTicks()-livetime;
+		alpha = (1.0f-((double)past/1000.f))*255.f;
+		
 	}
-	if(colour == 0)
+	if(alpha<=0)
 	{
 		kill();
 	}
@@ -49,7 +50,7 @@ bool Shrapnel::update()
 
 bool Shrapnel::render()
 {
-	aalineColor(SDL_GetVideoSurface(), X()+cos(rotation)*size, Y()+sin(rotation)*size, X()-cos(rotation)*size, Y()-sin(rotation)*size, colour);
+	aalineRGBA(SDL_GetVideoSurface(), X()+cos(rotation)*size, Y()+sin(rotation)*size, X()-cos(rotation)*size, Y()-sin(rotation)*size, (colour&0xff000000)>>24, (colour&0x00ff0000)>>16, (colour&0x0000ff00)>>8, alpha);
 	return isAlive();
 }
 

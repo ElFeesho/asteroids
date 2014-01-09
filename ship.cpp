@@ -17,7 +17,7 @@
 
 static void deployShrapnel(double angle, double x, double y, double xspeed, double yspeed)
 {
-	Engine::getInstance()->getActiveScene()->addEntity(new Shrapnel(angle, x, y, -3, -3));
+	Engine::getInstance()->getActiveScene()->addEntity(new Shrapnel(angle, x, y, -3, -3, 0xffffffff));
 }
 
 void createBullet(double angle, double x, double y, bool clusterShot)
@@ -125,12 +125,12 @@ bool Ship::update()
 	{
 		double xd = cos(angle)*-0.1;
 		double yd = sin(angle)*-0.1;
-		if(abs(xspeed+xd) < 15)
+		if(abs(xspeed+xd) < 10)
 		{
 			xspeed += xd;
 		}
 
-		if(abs(yspeed+yd) < 15)
+		if(abs(yspeed+yd) < 10)
 		{
 			yspeed += yd;
 		}
@@ -161,7 +161,7 @@ bool Ship::update()
 	}
 
 
-	if(keystate[SDLK_SPACE] && SDL_GetTicks() > lastShot+100 && shotCount<(5 * (powerUps[TRI_SHOT]?3:1)))
+	if(keystate[SDLK_SPACE] && SDL_GetTicks() > lastShot+300)
 	{
 		createBullet(angle, X(), Y(), powerUps[CLUSTER_SHOT]);
 		if(powerUps[TRI_SHOT])
