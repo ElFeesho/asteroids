@@ -13,7 +13,7 @@ public:
 
 	void generateAsteroids();
 private:
-
+	long lastThink;
 };
 
 #endif

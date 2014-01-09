@@ -3,6 +3,7 @@
 #include "ship.hpp"
 #include "asteroid.hpp"
 #include "score.hpp"
+#include "powerup.hpp"
 
 GameScene::GameScene()
 {
@@ -16,6 +17,7 @@ GameScene::GameScene()
 	addRenderable(score);
 
 	generateAsteroids();
+	lastThink = SDL_GetTicks();
 }
 
 GameScene::~GameScene()
@@ -52,6 +54,13 @@ void GameScene::generateAsteroids()
 
 void GameScene::update()
 {
-
+	if(SDL_GetTicks()>lastThink+5000)
+	{
+		if(rand()%100 > 75)
+		{
+			addEntity(new PowerUp((rand()%3) + 10));
+			lastThink = SDL_GetTicks();
+		}
+	}
 	Scene::update();
 }
